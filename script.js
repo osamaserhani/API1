@@ -1,21 +1,12 @@
 window.onload = function() {
   for(var i =0 ; i < booksNames.length ; i++) {
     doClick(); 
+    
   }
+
 };
 
 var books = [
-  {
-    title: '[Title  : True Fiction ]' ,
-    date_published: '[date_published  : Sep 3, 2017]     ' ,
-    author: '[author  :Lee Goldberg]     ',
-    reviews: '[reviews  : 750]     ',
-    rate: '[rate  : 4.4]     ',
-    img: 'https://images-na.ssl-images-amazon.com/images/I/51UbplnqSgL.jpg',
-    price : '[Price  : 9.99]',
-  }
-
-
   // add more book items here
 ]
 
@@ -33,112 +24,106 @@ function doClick() {
         author:  resObj.items[0].volumeInfo.authors[0],
         reviews: resObj.items[0].volumeInfo.ratingsCount,
         rate: resObj.items[0].volumeInfo.averageRating, 
-        img: resObj.items[0].volumeInfo.imageLinks[0]     })
+        img: resObj.items[0].volumeInfo.imageLinks.thumbnail})
+      upDateDOM()
       console.log(resObj)
 
     }
   }
   // Send an asynchronous HTTP GET request to the given end point (url)
-  xhttp.open("GET", "https://www.googleapis.com/books/v1/volumes?q=" + booksNames[i]  , true);
+  xhttp.open("GET", "https://www.googleapis.com/books/v1/volumes?q=" + booksNames[i]+ "&key=AIzaSyB_WJVwKPveKKtaNre1qRDqfPseGHZ2HmU"  , true);
   xhttp.send();
   i++;
 }
 
 
 // Default sort
-//priceHigh()
+StarsHigh ()
 upDateDOM()
 
 function createBookItem(bookObj) {
-  /*
-      <li>
-        <a href="#">React Quickly: Painless web apps with React, JSX, Redux, and GraphQL</a>
-        <img src="https://images-na.ssl-images-amazon.com/images/I/5159foIB0EL._AC_US218_.jpg"/>
-          <ul>
-            <li>Sep 28, 2017 </li>
-            <li>Azat Mardan</li>
-            <li>34 reviews</li>
-            <li>4.7 stars</li>
-          </ul>
-      </li>
-    */
+
   var liElem = document.createElement('li')
-  var ulElem = document.createElement('ul')
-  var liElem2 = document.createElement('li')
-  var img = document.createElement('img')
 
-  var p = document.createElement('p')
-  var p1 = document.createElement('p')
-  var aText = document.createTextNode(bookObj.title)
-  var aText1 = document.createTextNode(bookObj.date_published)
-  var aText2 = document.createTextNode(bookObj.author)
-  var aText3 = document.createTextNode(bookObj.reviews)
-  var aText4 = document.createTextNode(bookObj.rate)
+  var img = document.createElement('img');
+  img.src = bookObj.img;
+  img.width = 100;
+  img.height = 150;
+  liElem.appendChild(img);
 
 
-  img.src=bookObj.img
+  
 
-  p1.appendChild(aText)
-  p1.title = bookObj.title
-  p.appendChild(aText2)
-  liElem.appendChild(img)
+  var Lit = document.createElement("div");
+  var Lia = document.createElement('div');
+  var Lid = document.createElement('div');
+  var Lir = document.createElement('div');
+  var Lira = document.createElement('div');
 
-  liElem.appendChild(p1)
-  liElem2.appendChild(aText1)
-  liElem2.appendChild(aText2)
-  liElem2.appendChild(aText3)
-  liElem2.appendChild(aText4)
-  liElem2.appendChild(aText2)
+  //title
+  Lit.appendChild(document.createTextNode("Title :" + bookObj.title))
+  liElem.appendChild(Lit)
 
+  
+//Author
+  Lia.appendChild(document.createTextNode("Author: " + bookObj.author))
+  liElem.appendChild(Lia)
 
-  ulElem.appendChild(liElem2)
-  liElem.appendChild(ulElem)
+//Date
+  Lid.appendChild(document.createTextNode("Published Date: " + bookObj.date_published))
+  liElem.appendChild(Lid);
+
+//reviews
+  Lir.appendChild(document.createTextNode("Reviews: " + bookObj.reviews))
+  liElem.appendChild(Lir);
+
+//rate
+  Lira.appendChild(document.createTextNode("Rating: " + bookObj.rate ))
+  liElem.appendChild(Lira);
+  
+  
+  liElem.appendChild(document.createElement("hr"));
 
 
   // create the remaining elements
   return liElem
 }
-/*
-function priceHigh (){
-  books.sort(function (a, b) {
-    return b.nprice-a.nprice;
-  })
-}
-function pricelow (){
-  books.sort(function (a, b) {
-    return a.nprice-b.nprice;
-  })
-}
+
+
 function Dateold (){
   books.sort(function (a, b) {
-    return a.dp-b.dp;
+    var D1 = Date.parse(a.date_published);
+    var D2 = Date.parse(b.date_published);
+    return D2 - D1;
   })
 }
 function Datenew (){
   books.sort(function (a, b) {
-    return b.dp-a.dp;
+    var D1 = Date.parse(a.date_published);
+    var D2 = Date.parse(b.date_published);
+    return D1 - D2;
   })
 }
 function reviewsHigh (){
   books.sort(function (a, b) {
-    return b.r-a.r;
+    return b.reviews-a.reviews;
   })
 }
 function reviewslow (){
   books.sort(function (a, b) {
-    return a.r-b.r;
+    return a.reviews-b.reviews;
   })
 }
 function StarsHigh (){
   books.sort(function (a, b) {
-    return b.nRate-a.nRate;
+    return b.rate-a.rate;
   })
 }
 function Starslow (){
   books.sort(function (a, b) {
-    return a.nRate-b.nRate;
+    return a.rate-b.rate;
   })
-} */
+} 
 
 function upDateDOM() {
   var ulBooks = document.getElementById('books-list')
@@ -155,31 +140,23 @@ function upDateDOM() {
 // Sort by, select event
 var select = document.getElementById("sort-news")
 select.onchange = function () {
-  if (select.value === 'priceHigh') {
-   // priceHigh()
-    upDateDOM()
-  }
-  else if (select.value === 'priceLow') {
-  //  pricelow()
-    upDateDOM()
-  }
-  else if (select.value === 'Dateold') {
-  //  Dateold()
+  if (select.value === 'Dateold') {
+    Dateold()
     upDateDOM()
   } else if (select.value === 'Datenew') {
-   // Datenew()
+   Datenew()
     upDateDOM()
   } else if (select.value === 'reviewsHigh') {
-    //reviewsHigh()
+    reviewsHigh()
     upDateDOM()
   } else if (select.value === 'reviewslow') {
-    //reviewslow()
+    reviewslow()
     upDateDOM()
   } else if (select.value === 'StarsHigh') {
-    //StarsHigh()
+    StarsHigh()
     upDateDOM()
   } else if (select.value === 'Starslow') {
-    //Starslow()
+    Starslow()
     upDateDOM()
   }
 }
